@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       destination: undefined,
-      getGeoLocation: null,
+      getGeoLocation: undefined,
       platform: undefined,
       time: undefined,
       error: ""
