@@ -17,10 +17,10 @@ class App extends Component {
       time: undefined,
       error: ""
     };
-    this.getGeoLocation()
+    this.getGeoLocation();
   }
 
-  //method to get API
+  //method to get API for destination
   stopFinder = async e => {
     //prevent refresh
     e.preventDefault();
@@ -33,7 +33,7 @@ class App extends Component {
     const api_call = "stop_finder";
     const name = destination;
     const param = {
-      outputFormat: "rapidJSON", //response data type
+      outputFormat: "rapidJSON",
       type_sf: "stop",
       name_sf: name,
       coordOutputFormat: "EPSG:4326",
@@ -52,9 +52,9 @@ class App extends Component {
 
     //change state
     if (destination) {
-      // you only need to pass the items that are being updated
+      //pass the items that are being updated
       this.setState({
-        destination: data.locations[0].name,
+        destination: data.locations[0].name
       });
     } else {
       this.setState({
@@ -63,14 +63,39 @@ class App extends Component {
     }
   };
 
+  //fetch coord API
+  getCoord = async (e, latlng) => {
+    //prevent refresh
+    e.preventDefault();
+
+    //api call
+    const url = "/v1/tp/";
+    const api_call = "coord";
+    const param = {
+      outputFormat: "rapidJSON", //response data type
+      coordOutputFormat: "EPSG:4326", //format of the coordinates
+      coord: latlng,
+      inclFilter: "1",
+      type_1: "BUS_POINT",
+      radius_1: 500, //meters
+      PoisOnMapMacro: "true"
+    };
+    const searchParams = new URLSearchParams(param);
+    return await fetch(url + api_call + "?" + searchParams.toString());
+  };
+
   //get Geolocation
   getGeoLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(position => {
-        console.log(position.coords);
+        const latlng = position.coords;
+        console.log(latlng, "LATLONG");
+
+        //set state
         this.setState({
           location: position.coords
         });
+        return latlng;
       });
     } else {
       console.log("GeoLocation is not possible in this browser");
