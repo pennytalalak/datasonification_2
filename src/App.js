@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { departure_mon } from "./API/departure_mon";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 //component
@@ -40,7 +41,12 @@ class App extends Component {
     const searchParams = new URLSearchParams(param);
     const data = await fetch(
       url + api_call + "?" + searchParams.toString()
-    ).then(res => res.json());
+    ).then(res =>
+      res.json().then(data => {
+        const stopID = data.locations[0].id;
+        return departure_mon(stopID);
+      })
+    );
     console.log(data);
 
     //change state
@@ -62,11 +68,22 @@ class App extends Component {
   render() {
     return (
       <div>
-        <SearchBar stopFinder={this.stopFinder} />
-        <TransportInfo
-          destination={this.state.destination}
-          error={this.state.error}
-        />
+        <div className="wrapper">
+          <div className="main">
+            <div className="container">
+              <div className="row">
+                <div className="col-xs-5 bg-container"></div>
+                <div className="col-xs-7 form-container">
+                  <SearchBar stopFinder={this.stopFinder} />
+                  <TransportInfo
+                    destination={this.state.destination}
+                    error={this.state.error}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
