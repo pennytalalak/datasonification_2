@@ -10,7 +10,7 @@ const TransportInfo = props => {
       </p>
       <p className="transport__key">
         Closest stop:
-        <span className="transport__value"></span>
+        <span className="transport__value">{props.getGeoLocation}</span>
       </p>
       <p className="transport__key">Platform: </p>
       <p className="transport__key">Coming in: </p>

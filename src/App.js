@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       destination: undefined,
-      yourLocation: undefined,
+      getGeoLocation: null,
       platform: undefined,
       time: undefined,
       error: ""
@@ -53,7 +53,7 @@ class App extends Component {
     if (destination) {
       this.setState({
         destination: data.locations[0].name,
-        yourLocation: undefined,
+        getGeoLocation: undefined,
         platform: undefined,
         time: undefined,
         error: ""
@@ -62,6 +62,20 @@ class App extends Component {
       this.setState({
         error: "Please enter your destination"
       });
+    }
+  };
+
+  //get Geolocation
+  getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        console.log(position.coords);
+        this.setState({
+          getGeoLocation: position.coords
+        });
+      });
+    } else {
+      console.log("error");
     }
   };
 
@@ -77,6 +91,7 @@ class App extends Component {
                   <SearchBar stopFinder={this.stopFinder} />
                   <TransportInfo
                     destination={this.state.destination}
+                    getGeoLocation={this.state.getGeoLocation}
                     error={this.state.error}
                   />
                 </div>
