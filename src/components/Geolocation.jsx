@@ -1,10 +1,10 @@
 const getGeoLocation = () => {
-  if (navigator.geolocation) {
+  if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(position => {
       console.log(position.coords);
     });
   } else {
-    console.log("error");
+    console.log("GeoLocation is not possible in this browser");
   }
 };
 

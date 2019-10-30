@@ -12,11 +12,12 @@ class App extends Component {
     super(props);
     this.state = {
       destination: undefined,
-      getGeoLocation: undefined,
+      location: null,
       platform: undefined,
       time: undefined,
       error: ""
     };
+    this.getGeoLocation()
   }
 
   //method to get API
@@ -51,12 +52,9 @@ class App extends Component {
 
     //change state
     if (destination) {
+      // you only need to pass the items that are being updated
       this.setState({
         destination: data.locations[0].name,
-        getGeoLocation: undefined,
-        platform: undefined,
-        time: undefined,
-        error: ""
       });
     } else {
       this.setState({
@@ -67,15 +65,15 @@ class App extends Component {
 
   //get Geolocation
   getGeoLocation = () => {
-    if (navigator.geolocation) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(position => {
         console.log(position.coords);
         this.setState({
-          getGeoLocation: position.coords
+          location: position.coords
         });
       });
     } else {
-      console.log("error");
+      console.log("GeoLocation is not possible in this browser");
     }
   };
 
@@ -91,7 +89,7 @@ class App extends Component {
                   <SearchBar stopFinder={this.stopFinder} />
                   <TransportInfo
                     destination={this.state.destination}
-                    getGeoLocation={this.state.getGeoLocation}
+                    location={this.state.location}
                     error={this.state.error}
                   />
                 </div>
