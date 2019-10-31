@@ -46,7 +46,6 @@ class App extends Component {
     ).then(res =>
       res.json().then(data => {
         const stopID = data.locations[0].id;
-        // return departure_mon(stopID);
         return trip(stopID);
       })
     );
@@ -56,8 +55,9 @@ class App extends Component {
     if (destination) {
       //pass the items that are being updated
       this.setState({
-        // destination: data.locations[0].name.split(",")[0]
-        destination: data.journeys[0].legs[0].destination.name
+        destination: data.journeys[0].legs
+          .slice(-1)[0] //get the last station
+          .destination.name.split(",")[1] //only showing station name
       });
     } else {
       this.setState({

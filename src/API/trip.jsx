@@ -2,6 +2,7 @@ const url = "/v1/tp/";
 const api_call = "trip";
 
 const name_ori = "10101100"; //Central Station
+const my_coord = "151.2300809:-33.9181267:EPSG:4326";
 
 //function to make parameters
 export const trip = stopID => {
@@ -9,8 +10,8 @@ export const trip = stopID => {
     outputFormat: "rapidJSON", //response data type
     coordOutputFormat: "EPSG:4326",
     depArrMacro: "dep",
-    type_origin: "any",
-    name_origin: "10101100", // not Central Station
+    type_origin: "coord",
+    name_origin: my_coord, // not Central Station
     type_destination: "any",
     name_destination: stopID,
     calcNumberOfTrips: 1,
