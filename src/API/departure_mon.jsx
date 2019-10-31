@@ -11,12 +11,11 @@ export const departure_mon = stopID => {
     name_dm: stopID,
     departureMonitorMacro: "true",
     excludedMeans: "checkbox",
-    exclMOT_1: "",
-    exclMOT_4: "",
+    exclMOT_4: "1",
     exlMOT_5: "1",
-    exclMOT_7: "",
-    exclMOT_9: "",
-    exclMOT_11: "",
+    exclMOT_7: "1",
+    exclMOT_9: "1",
+    exclMOT_11: "1",
     TfNSWDM: "true"
   };
 

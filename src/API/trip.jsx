@@ -1,25 +1,25 @@
 const url = "/v1/tp/";
 const api_call = "trip";
 
-const name_ori = "10111010"; //Central Station
+const name_ori = "10101100"; //Central Station
 
 //function to make parameters
-export const trip = stopID_dest => {
+export const trip = stopID => {
   const data = {
     outputFormat: "rapidJSON", //response data type
     coordOutputFormat: "EPSG:4326",
     depArrMacro: "dep",
-    type_origin: "coord",
-    name_origin: "10111010", //Central Station
-    type_destination: "coord",
-    name_destination: stopID_dest,
+    type_origin: "any",
+    name_origin: "10101100", // not Central Station
+    type_destination: "any",
+    name_destination: stopID,
     calcNumberOfTrips: 1,
-    excludedMeans: "checkbox",
-    exclMOT_4: "1",
-    exclMOT_5: "1",
-    exclMOT_7: "1",
-    exclMOT_9: "1",
-    exclMOT_11: "1",
+    // excludedMeans: "checkbox",
+    // exclMOT_4: "1",
+    // exclMOT_5: "1",
+    // exclMOT_7: "1",
+    // exclMOT_9: "1",
+    // exclMOT_11: "1",
     TfNSWSF: "true"
   };
 

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { departure_mon } from "./API/departure_mon";
+import { trip } from "./API/trip";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -45,7 +46,8 @@ class App extends Component {
     ).then(res =>
       res.json().then(data => {
         const stopID = data.locations[0].id;
-        return departure_mon(stopID);
+        // return departure_mon(stopID);
+        return trip(stopID);
       })
     );
     console.log(data);
@@ -54,7 +56,8 @@ class App extends Component {
     if (destination) {
       //pass the items that are being updated
       this.setState({
-        destination: data.locations[0].name.split(",")[0]
+        // destination: data.locations[0].name.split(",")[0]
+        destination: data.journeys[0].legs[0].destination.name
       });
     } else {
       this.setState({
