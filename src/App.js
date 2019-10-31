@@ -54,7 +54,7 @@ class App extends Component {
     if (destination) {
       //pass the items that are being updated
       this.setState({
-        destination: data.locations[0].name
+        destination: data.locations[0].name.split(",")[0]
       });
     } else {
       this.setState({
@@ -62,30 +62,6 @@ class App extends Component {
       });
     }
   };
-
-  // //fetch coord API
-  // getCoord = async (e, latlng) => {
-  //   //prevent refresh
-  //   e.preventDefault();
-
-  //   //api call
-  //   const url = "/v1/tp/";
-  //   const api_call = "coord";
-  //   const param = {
-  //     outputFormat: "rapidJSON", //response data type
-  //     coordOutputFormat: "EPSG:4326", //format of the coordinates
-  //     coord: latlng,
-  //     inclFilter: "1",
-  //     type_1: "BUS_POINT",
-  //     radius_1: 500, //meters
-  //     PoisOnMapMacro: "true"
-  //   };
-  //   const searchParams = new URLSearchParams(param);
-  //   const coord_data = await fetch(
-  //     url + api_call + "?" + searchParams.toString()
-  //   ).then(res => res.json());
-  //   console.log(coord_data);
-  // };
 
   //get Geolocation
   getGeoLocation = () => {
