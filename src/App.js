@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { departure_mon } from "./API/departure_mon";
 import { trip } from "./API/trip";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import moment from "moment";
 
 //component
 import SearchBar from "./components/SearchBar";
@@ -12,11 +12,12 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      destination: undefined,
+      destination: null,
       location: null,
-      platform: undefined,
-      time: undefined,
-      error: ""
+      platform: null,
+      time: null,
+      error: "",
+      myCoord: null
     };
     this.getGeoLocation();
   }
@@ -46,18 +47,33 @@ class App extends Component {
     ).then(res =>
       res.json().then(data => {
         const stopID = data.locations[0].id;
-        return trip(stopID);
+        return trip(stopID, this.state.myCoord);
       })
     );
+
+    //see the trip data API
     console.log(data);
 
     //change state
     if (destination) {
+      // PENNY playing around with time here
+      const time = data.journeys[0].legs[0].destination.arrivalTimeEstimated;
+      let localTime = moment.parseZone(time);
+
+      let now = moment();
+      const timeEstimate = moment.duration(localTime.diff(now));
+      console.log("Moment Time", timeEstimate.minutes());
+
+      ///
+
       //pass the items that are being updated
       this.setState({
         destination: data.journeys[0].legs
-          .slice(-1)[0] //get the last station
-          .destination.name.split(",")[1] //only showing station name
+          .slice(-1)[0] //get the last destination
+          .destination.name.split(",")[1],
+        location: data.journeys[0].legs[0].destination.name,
+        platform: data.journeys[0].legs[1].destination.name.split(",")[2],
+        time: timeEstimate.minutes()
       });
     } else {
       this.setState({
@@ -66,6 +82,12 @@ class App extends Component {
     }
   };
 
+  //convert time function
+  getTime = data => {};
+
+  //count down
+  countDown = () => {};
+
   //get Geolocation
   getGeoLocation = () => {
     if ("geolocation" in navigator) {
@@ -73,11 +95,10 @@ class App extends Component {
         const latlng = position.coords;
         console.log(latlng, "LATLONG");
 
-        //set state
+        //set State
         this.setState({
-          location: position.coords
+          myCoord: `${latlng.longitude}: ${latlng.latitude}:EPSG:4326`
         });
-        return latlng;
       });
     } else {
       console.log("GeoLocation is not possible in this browser");
@@ -97,6 +118,8 @@ class App extends Component {
                   <TransportInfo
                     destination={this.state.destination}
                     location={this.state.location}
+                    platform={this.state.platform}
+                    time={this.state.time}
                     error={this.state.error}
                   />
                 </div>

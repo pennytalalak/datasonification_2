@@ -10,16 +10,19 @@ const TransportInfo = props => {
       </p>
       <p className="transport__key">
         Closest stop:
-        <span className="transport__value">
-          {props.location &&
-            `${props.location.latitude} , ${props.location.longitude}`}
-        </span>
+        <span className="transport__value">{props.location}</span>
       </p>
       <p className="transport__key">
         Platform:
-        <span className="transport__value"></span>
+        <span className="transport__value">{props.platform}</span>
       </p>
-      <p className="transport__key">Coming in: </p>
+      <p className="transport__key">
+        Coming in:
+        <span className="transport__value">
+          {props.time}
+          {props.time ? (props.time > 1 ? " mins" : " min") : ""}
+        </span>
+      </p>
       {props.error && <p>{props.error}</p>}
     </div>
   );

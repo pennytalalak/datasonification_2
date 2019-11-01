@@ -1,26 +1,19 @@
 const url = "/v1/tp/";
 const api_call = "trip";
 
-const name_ori = "10101100"; //Central Station
-const my_coord = "151.2300809:-33.9181267:EPSG:4326";
+// const myCoord = "151.208351:-33.867357:EPSG:4326";
 
 //function to make parameters
-export const trip = stopID => {
+export const trip = (stopID, myCoord) => {
   const data = {
-    outputFormat: "rapidJSON", //response data type
+    outputFormat: "rapidJSON",
     coordOutputFormat: "EPSG:4326",
     depArrMacro: "dep",
     type_origin: "coord",
-    name_origin: my_coord, // not Central Station
+    name_origin: myCoord,
     type_destination: "any",
     name_destination: stopID,
     calcNumberOfTrips: 1,
-    // excludedMeans: "checkbox",
-    // exclMOT_4: "1",
-    // exclMOT_5: "1",
-    // exclMOT_7: "1",
-    // exclMOT_9: "1",
-    // exclMOT_11: "1",
     TfNSWSF: "true"
   };
 
