@@ -18,10 +18,7 @@ const TransportInfo = props => {
       </p>
       <p className="transport__key">
         Coming in:
-        <span className="transport__value">
-          {props.time}
-          {props.time ? (props.time > 1 ? " mins" : " min") : ""}
-        </span>
+        <span className="transport__value">{props.countdown}</span>
       </p>
       {props.error && <p>{props.error}</p>}
     </div>
