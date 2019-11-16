@@ -20,7 +20,7 @@ const TransportInfo = props => {
         Coming in:
         <span className="transport__value">{props.countdown}</span>
       </p>
-      {props.error && <p>{props.error}</p>}
+      {props.error && <p className="error-message">{props.error}</p>}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import moment from "moment";
 //component
 import SearchBar from "./components/SearchBar";
 import TransportInfo from "./components/TransportInfo";
+import TrainAudio from "./components/Sound";
 
 class App extends Component {
   constructor(props) {
@@ -14,25 +15,33 @@ class App extends Component {
     this.state = {
       destination: null,
       location: null,
-      platform: null,
+      platfrm: null,
       time: null,
       countdown: 0,
       countdownInterval: null,
       arrived: false,
       error: "",
       myCoord: null,
-      trainSound: null
+      playAudio: false,
+      volumeAudio: 0
     };
     this.getGeoLocation();
   }
 
   //method to get API for destination
   stopFinder = async e => {
+    // console.log("lalla");
+
+    // if (this.state.destination) {
+    //   //if destination is undefined
+    //   return;
+    // }
+
     //prevent refresh
     e.preventDefault();
     clearInterval(this.state.countdownInterval);
 
-    //user input
+    //input
     const destination = e.target.elements.destination.value;
     const { myCoord } = this.state;
 
@@ -52,6 +61,10 @@ class App extends Component {
       url + api_call + "?" + searchParams.toString()
     ).then(res =>
       res.json().then(data => {
+        if (!data || data.locations.length === 0) {
+          return data;
+        }
+
         const stopID = data.locations[0].id;
         return trip(stopID, myCoord);
       })
@@ -60,8 +73,8 @@ class App extends Component {
     //see the trip data API
     console.log(data);
 
-    //change state
-    if (destination) {
+    //change state when there's destination
+    if (destination && data && data.journeys) {
       // get time
       const time = data.journeys[0].legs[0].destination.arrivalTimeEstimated;
       let localTime = moment.parseZone(time); //convert time
@@ -75,8 +88,11 @@ class App extends Component {
           .slice(-1)[0] //get the last destination
           .destination.name.split(",")[1],
         location: data.journeys[0].legs[0].destination.name,
-        platform: data.journeys[0].legs[1].destination.name.split(",")[2],
-        countdown: timeEstimate
+        platform: data.journeys[0].legs
+          .slice(-1)[0]
+          .destination.name.split(",")[2],
+        countdown: timeEstimate,
+        error: ""
       });
 
       //starting the countdown
@@ -90,20 +106,32 @@ class App extends Component {
           countdown: newCountdown
         });
 
+        const volumeTime = 480; //5 mins
+
         if (newCountdown < 0) {
           clearInterval(countdownInterval);
           this.setState({ arrived: true });
-        } else if (newCountdown < 180) {
-          // 180 secs = 3 mins
-          //for 60 seconds, play the horn sound, so when newCountdown - 60, set the new state and have latestCountdown - 60
-          //start playing the music and set the state
-          //this.setState({ trainSound })
+        } else if (newCountdown < volumeTime) {
+          const xNumber = 100 / volumeTime; //xNumber = factor
+          const volume = (volumeTime - newCountdown) * xNumber;
+
+          this.setState({ playAudio: true, volumeAudio: volume });
         }
       }, 1000); //end setInterval function
       this.setState({ countdownInterval });
     } else {
+      let errorMessage = "Please enter your destination";
+
+      if (destination) {
+        if (data && data.locations.length === 0) {
+          errorMessage = "No location found";
+        } else if (!data || !data.journeys || data.journeys.length === 0) {
+          errorMessage = "API Error";
+        }
+      }
+
       this.setState({
-        error: "Please enter your destination"
+        error: errorMessage
       });
     }
   };
@@ -113,7 +141,6 @@ class App extends Component {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(position => {
         const latlng = position.coords;
-        console.log(latlng);
 
         //set State
         this.setState({
@@ -130,7 +157,7 @@ class App extends Component {
   }
 
   render() {
-    const { countdown, arrived } = this.state;
+    const { countdown, arrived, playAudio, volumeAudio } = this.state;
     let countdownText = "";
     if (arrived) {
       countdownText = "ARRIVED";
@@ -156,6 +183,7 @@ class App extends Component {
                     countdown={countdownText}
                     error={this.state.error}
                   />
+                  <TrainAudio play={playAudio} volumeAudio={volumeAudio} />
                 </div>
               </div>
             </div>
